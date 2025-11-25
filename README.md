@@ -7,7 +7,7 @@ En este examen se tuvo que hacer un Sistema Web para Préstamo de Instrumentos d
 
 ---
 ### Organizacion del equipo:
-- Ernesto: 
-- Nicole:
-- Armando:
-- Kiara:
+- Ernesto: Lider tecnico, Backend
+- Nicole: QA/Docs, Base de datos
+- Armando: Frontend
+- Kiara: DevOps/Git
