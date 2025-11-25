@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Búsqueda - Lab Instruments</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styless.css" rel="stylesheet">
+</head>
+<body>
+    <div id="navbar"></div>
+
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-search me-3"></i>Búsqueda Avanzada</h1>
+                    <p class="lead">Encuentra instrumentos de laboratorio en tiempo real</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-binoculars fa-4x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card card-custom">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group search-input-group">
+                            <input type="text" class="form-control search-input" id="searchInput" 
+                                   placeholder="Buscar por nombre, categoría, ubicación...">
+                            <button class="btn search-btn" type="button" onclick="searchInstrumentos()">
+                                <i class="fas fa-search me-2"></i>Buscar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-grid h-100">
+                            <button class="btn btn-outline-primary btn-custom" onclick="clearSearch()">
+                                <i class="fas fa-eraser me-2"></i>Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Escribe para buscar en tiempo real o presiona Enter
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-custom">
+            <div class="card-header bg-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-list me-2"></i>
+                    Resultados de la Búsqueda
+                    <span class="badge bg-primary ms-2" id="resultsCount">0</span>
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="fas fa-hashtag"></i> ID</th>
+                                <th><i class="fas fa-tag"></i> Nombre</th>
+                                <th><i class="fas fa-folder"></i> Categoría</th>
+                                <th><i class="fas fa-circle"></i> Estado</th>
+                                <th><i class="fas fa-map-marker-alt"></i> Ubicación</th>
+                                <th><i class="fas fa-calendar"></i> Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchResults">
+                            <tr>
+                                <td colspan="6" class="text-center py-5">
+                                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">Ingresa un término de búsqueda para comenzar</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card card-custom bg-primary text-white">
+                    <div class="card-body text-center">
+                        <i class="fas fa-vial fa-2x mb-2"></i>
+                        <h4 id="totalResults">0</h4>
+                        <small>Total Encontrados</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-custom bg-success text-white">
+                    <div class="card-body text-center">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <h4 id="availableResults">0</h4>
+                        <small>Disponibles</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-custom bg-warning text-white">
+                    <div class="card-body text-center">
+                        <i class="fas fa-tools fa-2x mb-2"></i>
+                        <h4 id="inUseResults">0</h4>
+                        <small>En Uso</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-custom bg-danger text-white">
+                    <div class="card-body text-center">
+                        <i class="fas fa-wrench fa-2x mb-2"></i>
+                        <h4 id="maintenanceResults">0</h4>
+                        <small>Mantenimiento</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Verificar autenticación
+            try {
+                const response = await fetch('/tipo-usuario');
+                if (!response.ok) {
+                    window.location.href = '/login.html';
+                    return;
+                }
+            } catch (error) {
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            loadNavbar();
+            setupSearch();
+        });
+
+        async function loadNavbar() {
+            try {
+                const response = await fetch('navbar.html');
+                const html = await response.text();
+                document.getElementById('navbar').innerHTML = html;
+                const scripts = document.getElementById('navbar').getElementsByTagName('script');
+                for (let script of scripts) eval(script.innerHTML);
+            } catch (error) {
+                console.error('Error cargando navbar:', error);
+            }
+        }
+
+        function setupSearch() {
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                if (e.target.value.length >= 2 || e.target.value.length === 0) {
+                    searchInstrumentos(e.target.value);
+                }
+            });
+
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchInstrumentos(this.value);
+                }
+            });
+
+            searchInstrumentos('');
+        }
+
+        async function searchInstrumentos(query = '') {
+            const searchTerm = query || document.getElementById('searchInput').value;
+            
+            try {
+                const response = await fetch(`/api/instrumentos/buscar?q=${encodeURIComponent(searchTerm)}`);
+                
+                if (!response.ok) {
+                    throw new Error('Error en la búsqueda');
+                }
+                
+                const instrumentos = await response.json();
+                displayResults(instrumentos);
+                updateStatistics(instrumentos);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('searchResults').innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-danger py-4">
+                            <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                            <p>Error en la búsqueda. Intenta nuevamente.</p>
+                        </td>
+                    </tr>
+                `;
+                updateStatistics([]);
+            }
+        }
+
+        function displayResults(instrumentos) {
+            const tbody = document.getElementById('searchResults');
+            const resultsCount = document.getElementById('resultsCount');
+            
+            resultsCount.textContent = instrumentos.length;
+
+            if (instrumentos.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No se encontraron instrumentos</p>
+                            <small class="text-muted">Intenta con otros términos de búsqueda</small>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = instrumentos.map(instrumento => `
+                <tr>
+                    <td><strong>#${instrumento.id}</strong></td>
+                    <td>
+                        <i class="fas fa-vial me-2 text-primary"></i>
+                        <strong>${instrumento.nombre}</strong>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark">
+                            <i class="fas fa-folder me-1"></i>${instrumento.categoria}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${getEstadoBadgeClass(instrumento.estado)}">
+                            <i class="fas ${getEstadoIcon(instrumento.estado)} me-1"></i>
+                            ${instrumento.estado}
+                        </span>
+                    </td>
+                    <td>
+                        <i class="fas fa-map-marker-alt me-1 text-muted"></i>
+                        ${instrumento.ubicacion || 'No especificada'}
+                    </td>
+                    <td>
+                        <small class="text-muted">
+                            ${new Date(instrumento.created_at).toLocaleDateString()}
+                        </small>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStatistics(instrumentos) {
+            document.getElementById('totalResults').textContent = instrumentos.length;
+            document.getElementById('availableResults').textContent = 
+                instrumentos.filter(i => i.estado === 'DISPONIBLE').length;
+            document.getElementById('inUseResults').textContent = 
+                instrumentos.filter(i => i.estado === 'PRESTADO').length;
+            document.getElementById('maintenanceResults').textContent = 
+                instrumentos.filter(i => i.estado === 'MANTENIMIENTO').length;
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            searchInstrumentos('');
+        }
+
+        function getEstadoBadgeClass(estado) {
+            switch(estado) {
+                case 'DISPONIBLE': return 'badge-available';
+                case 'PRESTADO': return 'badge-borrowed';
+                case 'MANTENIMIENTO': return 'badge-maintenance';
+                default: return 'bg-secondary';
+            }
+        }
+
+        function getEstadoIcon(estado) {
+            switch(estado) {
+                case 'DISPONIBLE': return 'fa-check-circle';
+                case 'PRESTADO': return 'fa-user-clock';
+                case 'MANTENIMIENTO': return 'fa-wrench';
+                default: return 'fa-question-circle';
+            }
+        }
+    </script>
+</body>
+</html>
