@@ -1,0 +1,729 @@
+/* ========================================
+   ESTILOS MINIMALISTAS
+   ========================================
+   CSS anterior comentado más abajo
+*/
+
+:root {
+  --primary: #9333ea;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --text: #1f2937;
+  --text-light: #6b7280;
+  --border: #e5e7eb;
+  --bg: #ffffff;
+  --bg-light: #f9fafb;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* Componentes básicos */
+.hero-section,
+.welcome-section {
+  background: var(--primary);
+  color: white;
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+}
+
+.card-custom,
+.feature-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-custom,
+.btn-auth {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-custom:hover,
+.btn-auth:hover {
+  background: #7e22ce;
+}
+
+/* Navbar */
+.navbar-custom {
+  background: var(--primary);
+}
+
+.navbar-brand-custom {
+  font-weight: 600;
+  color: white !important;
+}
+
+.nav-link-custom {
+  color: rgba(255, 255, 255, 0.9) !important;
+  transition: color 0.2s;
+}
+
+.nav-link-custom:hover {
+  color: white !important;
+}
+
+/* Autenticación */
+.auth-body {
+  background: var(--bg-light);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.auth-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.auth-header {
+  background: var(--primary);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.auth-body-content {
+  padding: 2rem;
+}
+
+.form-control-custom {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.form-control-custom:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.info-box {
+  background: var(--bg-light);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+/* Badges y estados */
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.badge-available {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge-borrowed {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-maintenance {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Tablas */
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-custom thead {
+  background: var(--bg-light);
+  border-bottom: 2px solid var(--border);
+}
+
+.table-custom th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.table-custom td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.table-custom tbody tr:hover {
+  background: var(--bg-light);
+}
+
+/* Búsqueda */
+.search-input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* Modales */
+.modal-custom .modal-content {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.modal-custom .modal-header {
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-section,
+  .welcome-section {
+    padding: 2rem 0;
+  }
+  
+  .auth-card {
+    margin: 1rem;
+  }
+}
+
+/* ========================================
+   ESTILOS ANTERIORES (COMENTADOS)
+   ======================================== 
+
+:root {
+  --primary: #6a11cb;
+  --secondary: #2575fc;
+  --success: #28a745;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --info: #17a2b8;
+  --dark: #343a40;
+  --light: #f8f9fa;
+  --white: #ffffff;
+  --gray: #6c757d;
+  --gray-light: #e9ecef;
+  --gradient-primary: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+}
+
+.hero-section {
+  background: var(--gradient-primary);
+  color: var(--white);
+  padding: 40px 0;
+  margin-bottom: 30px;
+  border-radius: 0 0 20px 20px;
+}
+
+.card-custom {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.card-custom:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.btn-custom {
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-custom:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary-custom {
+  background: var(--gradient-primary);
+  color: var(--white);
+}
+
+.btn-primary-custom:hover {
+  background: linear-gradient(135deg, #5a0db5 0%, #1c68e8 100%);
+  color: var(--white);
+}
+
+.status-badge {
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.8em;
+}
+
+.badge-available {
+  background-color: var(--success);
+  color: var(--white);
+}
+
+.badge-borrowed {
+  background-color: var(--warning);
+  color: var(--dark);
+}
+
+.badge-maintenance {
+  background-color: var(--danger);
+  color: var(--white);
+}
+
+.navbar-custom {
+  background: var(--gradient-primary);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar-brand-custom {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--white) !important;
+}
+
+.nav-link-custom {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  margin: 0 2px;
+}
+
+.nav-link-custom:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--white) !important;
+}
+
+.navbar-text-custom {
+  color: var(--white);
+  font-weight: 500;
+}
+
+.auth-body {
+  background: var(--gradient-primary);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-card {
+  background: var(--white);
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  overflow: hidden;
+  max-width: 450px;
+  width: 100%;
+}
+
+.auth-header {
+  background: var(--gradient-primary);
+  color: var(--white);
+  padding: 30px;
+  text-align: center;
+}
+
+.auth-body-content {
+  padding: 30px;
+}
+
+.form-control-custom {
+  border-radius: 10px;
+  border: 2px solid var(--gray-light);
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.form-control-custom:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(106, 17, 203, 0.25);
+}
+
+.btn-auth {
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+  color: var(--white);
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.btn-auth:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+}
+
+.info-box {
+  background: var(--light);
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 20px;
+  font-size: 0.9em;
+}
+
+.welcome-section {
+  background: var(--gradient-primary);
+  color: var(--white);
+  padding: 60px 0;
+  margin-bottom: 40px;
+  border-radius: 0 0 30px 30px;
+}
+
+.stats-card {
+  background: var(--gradient-primary);
+  color: var(--white);
+  text-align: center;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.feature-card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  height: 100%;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.role-badge {
+  font-size: 0.8em;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+}
+
+.table-custom {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.table-custom thead {
+  background: var(--gradient-primary);
+  color: var(--white);
+}
+
+.table-custom th {
+  border: none;
+  padding: 15px;
+  font-weight: 600;
+}
+
+.table-custom td {
+  border: none;
+  padding: 15px;
+  vertical-align: middle;
+}
+
+.table-custom tbody tr {
+  transition: all 0.3s ease;
+}
+
+.table-custom tbody tr:hover {
+  background-color: rgba(106, 17, 203, 0.05);
+}
+
+.search-input-group {
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.search-input {
+  border: none;
+  padding: 15px 20px;
+  font-size: 1.1em;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.search-btn {
+  background: var(--gradient-primary);
+  border: none;
+  color: var(--white);
+  padding: 15px 25px;
+  font-weight: 600;
+}
+
+.modal-custom .modal-content {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-custom .modal-header {
+  background: var(--gradient-primary);
+  color: var(--white);
+  border-radius: 15px 15px 0 0;
+  border: none;
+}
+
+.modal-custom .modal-title {
+  font-weight: 600;
+}
+
+.text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shadow-custom {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+}
+
+.rounded-custom {
+  border-radius: 12px !important;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 30px 0;
+    border-radius: 0 0 15px 15px;
+  }
+  
+  .welcome-section {
+    padding: 40px 0;
+    border-radius: 0 0 20px 20px;
+  }
+  
+  .auth-card {
+    margin: 10px;
+  }
+  
+  .card-custom {
+    margin-bottom: 15px;
+  }
+  
+  .table-responsive {
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 576px) {
+  .auth-header {
+    padding: 20px;
+  }
+  
+  .auth-body-content {
+    padding: 20px;
+  }
+  
+  .hero-section h1 {
+    font-size: 1.8rem;
+  }
+  
+  .welcome-section h1 {
+    font-size: 1.8rem;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.alert-custom {
+  border: none;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+*/
+
+/* ========================================
+   OVERRIDE DE COLORES BOOTSTRAP A MORADO
+   ======================================== */
+
+/* Botones primarios */
+.btn-primary {
+  background-color: #9333ea;
+  border-color: #9333ea;
+}
+
+.btn-primary:hover {
+  background-color: #7e22ce;
+  border-color: #7e22ce;
+}
+
+.btn-primary:focus,
+.btn-primary.focus {
+  background-color: #7e22ce;
+  border-color: #7e22ce;
+  box-shadow: 0 0 0 0.25rem rgba(147, 51, 234, 0.5);
+}
+
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.show {
+  background-color: #6b21a8;
+  border-color: #6b21a8;
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled {
+  background-color: #9333ea;
+  border-color: #9333ea;
+}
+
+.btn-outline-primary {
+  color: #9333ea;
+  border-color: #9333ea;
+}
+
+.btn-outline-primary:hover {
+  color: #fff;
+  background-color: #9333ea;
+  border-color: #9333ea;
+}
+
+.btn-outline-primary:focus,
+.btn-outline-primary.focus {
+  box-shadow: 0 0 0 0.25rem rgba(147, 51, 234, 0.5);
+}
+
+.btn-outline-primary:active,
+.btn-outline-primary.active,
+.btn-outline-primary.show {
+  color: #fff;
+  background-color: #9333ea;
+  border-color: #9333ea;
+}
+
+/* Links y acentos */
+a {
+  color: #9333ea;
+}
+
+a:hover {
+  color: #7e22ce;
+}
+
+/* Badges */
+.badge-primary {
+  background-color: #9333ea;
+}
+
+/* Alerts */
+.alert-info {
+  background-color: #f3e8ff;
+  border-color: #e9d5ff;
+  color: #6b21a8;
+}
+
+/* Table active */
+.table-active {
+  background-color: #f3e8ff;
+}
+
+/* Progress bars */
+.progress-bar {
+  background-color: #9333ea;
+}
+
+/* Form focus */
+.form-control:focus,
+.form-select:focus {
+  border-color: #9333ea;
+  box-shadow: 0 0 0 0.25rem rgba(147, 51, 234, 0.25);
+}
+
+/* Spinners */
+.spinner-border-sm {
+  border-color: currentColor;
+  border-right-color: transparent;
+}
+
+/* Text utilities */
+.text-primary {
+  color: #9333ea !important;
+}
+
+/* Background utilities */
+.bg-primary {
+  background-color: #9333ea !important;
+}
