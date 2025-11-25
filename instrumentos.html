@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instrumentos - Lab Instruments</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styless.css" rel="stylesheet">
+</head>
+<body>
+    <div id="navbar"></div>
+
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-vial me-3"></i>Gestión de Instrumentos</h1>
+                    <p class="lead" id="heroDescription">Administra el inventario de instrumentos de laboratorio</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-microscope fa-4x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row mb-4" id="actionCards">
+            <!-- Las tarjetas de acción se cargarán dinámicamente según el rol -->
+        </div>
+
+        <div class="card card-custom">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-custom" id="searchInput" 
+                                   placeholder="Buscar instrumentos...">
+                            <button class="btn btn-primary btn-custom" type="button" onclick="searchInstrumentos()">
+                                <i class="fas fa-search me-2"></i>Buscar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex gap-2 justify-content-end">
+                            <button class="btn btn-outline-secondary btn-custom" onclick="clearSearch()">
+                                <i class="fas fa-eraser me-2"></i>Limpiar
+                            </button>
+                            <button class="btn btn-success btn-custom" id="btnAddInstrument" style="display: none;" 
+                                    onclick="showAddModal()">
+                                <i class="fas fa-plus me-2"></i>Nuevo Instrumento
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-custom">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-list me-2"></i>
+                    Lista de Instrumentos
+                    <span class="badge bg-primary ms-2" id="instrumentsCount">0</span>
+                </h4>
+                <div class="btn-group" id="tableActions" style="display: none;">
+                    <button class="btn btn-sm btn-outline-primary btn-custom" onclick="showUploadModal()">
+                        <i class="fas fa-upload me-1"></i>Subir Excel
+                    </button>
+                    <button class="btn btn-sm btn-outline-success btn-custom" onclick="downloadExcel()">
+                        <i class="fas fa-download me-1"></i>Descargar Excel
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Estado</th>
+                                <th>Ubicación</th>
+                                <th>Fecha</th>
+                                <th id="actionsHeader" style="display: none;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="instrumentsTable">
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="spinner-border text-primary mb-3" role="status">
+                                        <span class="visually-hidden">Cargando...</span>
+                                    </div>
+                                    <p class="text-muted">Cargando instrumentos...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-custom" id="instrumentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Nuevo Instrumento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="instrumentForm">
+                        <input type="hidden" id="instrumentId">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre del Instrumento</label>
+                            <input type="text" class="form-control form-control-custom" id="nombre" required 
+                                   placeholder="Ej: Microscopio Óptico">
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoria" class="form-label">Categoría</label>
+                            <input type="text" class="form-control form-control-custom" id="categoria" required 
+                                   placeholder="Ej: Microscopía, Análisis, Medición">
+                        </div>
+                        <div class="mb-3">
+                            <label for="estado" class="form-label">Estado</label>
+                            <select class="form-control form-control-custom" id="estado" required>
+                                <option value="DISPONIBLE">Disponible</option>
+                                <option value="PRESTADO">Prestado</option>
+                                <option value="MANTENIMIENTO">En Mantenimiento</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ubicacion" class="form-label">Ubicación</label>
+                            <input type="text" class="form-control form-control-custom" id="ubicacion" 
+                                   placeholder="Ej: Laboratorio A, Estante 3">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-custom" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary btn-custom" onclick="saveInstrument()">
+                        <i class="fas fa-save me-2"></i>Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-custom" id="uploadModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Subir Archivo Excel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="file" id="excelFile" accept=".xlsx,.xls" class="form-control form-control-custom">
+                    </div>
+                    <div class="alert alert-info">
+                        <small>
+                            <i class="fas fa-info-circle me-2"></i>
+                            El archivo Excel debe tener las columnas: 
+                            <strong>nombre, categoria, estado, ubicacion</strong>
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-custom" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary btn-custom" onclick="uploadExcel()">
+                        <i class="fas fa-upload me-2"></i>Subir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let modal = null;
+        let uploadModal = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNavbar();
+            loadUserRole();
+            initializeModals();
+            loadInstrumentos();
+            setupSearch();
+        });
+
+        async function loadNavbar() {
+            try {
+                const response = await fetch('navbar.html');
+                const html = await response.text();
+                document.getElementById('navbar').innerHTML = html;
+                const scripts = document.getElementById('navbar').getElementsByTagName('script');
+                for (let script of scripts) eval(script.innerHTML);
+            } catch (error) {
+                console.error('Error cargando navbar:', error);
+            }
+        }
+
+        async function loadUserRole() {
+            try {
+                const response = await fetch('/tipo-usuario');
+                if (!response.ok) {
+                    // Si no está autenticado, redirigir al login
+                    window.location.href = '/login.html';
+                    return;
+                }
+                
+                const data = await response.json();
+                setupUIForRole(data.tipo_usuario);
+            } catch (error) {
+                console.error('Error cargando rol:', error);
+                window.location.href = '/login.html';
+            }
+        }
+
+        function setupUIForRole(role) {
+            const heroDescription = document.getElementById('heroDescription');
+            const btnAddInstrument = document.getElementById('btnAddInstrument');
+            const tableActions = document.getElementById('tableActions');
+            const actionsHeader = document.getElementById('actionsHeader');
+            const actionCards = document.getElementById('actionCards');
+
+            let description = '';
+            let showActions = false;
+
+            switch(role) {
+                case 'admin':
+                    description = 'Administra y gestiona todo el inventario de productos';
+                    showActions = true;
+                    break;
+                case 'proveedor':
+                    description = 'Gestiona tus productos del inventario';
+                    showActions = true;
+                    break;
+                case 'cliente':
+                    description = 'Consulta los productos disponibles';
+                    showActions = false;
+                    break;
+            }
+
+            if (heroDescription) heroDescription.textContent = description;
+            if (btnAddInstrument) btnAddInstrument.style.display = showActions ? 'block' : 'none';
+            if (tableActions) tableActions.style.display = showActions ? 'flex' : 'none';
+            if (actionsHeader) actionsHeader.style.display = showActions ? 'table-cell' : 'none';
+
+            setupActionCards(role, actionCards);
+        }
+
+        function setupActionCards(role, container) {
+            let cardsHTML = '';
+
+            switch(role) {
+                case 'admin':
+                    cardsHTML = `
+                        <div class="col-md-3">
+                            <div class="card card-custom bg-primary text-white">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-plus-circle fa-3x mb-3"></i>
+                                    <h5>Agregar</h5>
+                                    <p class="small">Nuevo producto al inventario</p>
+                                    <button class="btn btn-light btn-sm" onclick="showAddModal()">
+                                        <i class="fas fa-plus me-1"></i>Agregar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-custom bg-success text-white">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-upload fa-3x mb-3"></i>
+                                    <h5>Importar</h5>
+                                    <p class="small">Cargar desde archivo Excel</p>
+                                    <button class="btn btn-light btn-sm" onclick="showUploadModal()">
+                                        <i class="fas fa-upload me-1"></i>Importar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-custom bg-info text-white">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-download fa-3x mb-3"></i>
+                                    <h5>Exportar</h5>
+                                    <p class="small">Descargar inventario en Excel</p>
+                                    <button class="btn btn-light btn-sm" onclick="downloadExcel()">
+                                        <i class="fas fa-download me-1"></i>Exportar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'proveedor':
+                    cardsHTML = `
+                        <div class="col-md-4">
+                            <div class="card card-custom bg-primary text-white">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-plus-circle fa-3x mb-3"></i>
+                                    <h5>Agregar</h5>
+                                    <p class="small">Nuevo producto</p>
+                                    <button class="btn btn-light btn-sm" onclick="showAddModal()">
+                                        <i class="fas fa-plus me-1"></i>Agregar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card card-custom bg-success text-white">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-download fa-3x mb-3"></i>
+                                    <h5>Exportar</h5>
+                                    <p class="small">Descargar lista en Excel</p>
+                                    <button class="btn btn-light btn-sm" onclick="downloadExcel()">
+                                        <i class="fas fa-download me-1"></i>Exportar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'cliente':
+                    cardsHTML = `
+                        <div class="col-md-6">
+                            <div class="card card-custom bg-primary text-white">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-search fa-3x mb-3"></i>
+                                    <h5>Búsqueda</h5>
+                                    <p class="small">Buscar productos disponibles</p>
+                                    <a href="/busqueda" class="btn btn-light btn-sm">
+                                        <i class="fas fa-search me-1"></i>Buscar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card card-custom bg-success text-white">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-list fa-3x mb-3"></i>
+                                    <h5>Catálogo</h5>
+                                    <p class="small">Ver todos los productos</p>
+                                    <button class="btn btn-light btn-sm" onclick="loadInstrumentos()">
+                                        <i class="fas fa-sync me-1"></i>Actualizar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+
+            if (container) container.innerHTML = cardsHTML;
+        }
+
+        function initializeModals() {
+            modal = new bootstrap.Modal(document.getElementById('instrumentModal'));
+            uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
+        }
+
+        function setupSearch() {
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                if (e.target.value === '') {
+                    loadInstrumentos();
+                } else {
+                    searchInstrumentos(e.target.value);
+                }
+            });
+
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchInstrumentos(this.value);
+                }
+            });
+        }
+
+        async function loadInstrumentos() {
+            try {
+                const response = await fetch('/api/instrumentos');
+                
+                if (!response.ok) {
+                    throw new Error('Error al cargar instrumentos');
+                }
+                
+                const instrumentos = await response.json();
+                displayInstrumentos(instrumentos);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('instrumentsTable').innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center text-danger py-4">
+                            <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                            <p>Error al cargar los instrumentos</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        async function searchInstrumentos(query = null) {
+            const searchTerm = query || document.getElementById('searchInput').value;
+            
+            if (!searchTerm.trim()) {
+                loadInstrumentos();
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/instrumentos/buscar?q=${encodeURIComponent(searchTerm)}`);
+                
+                if (!response.ok) {
+                    throw new Error('Error en la búsqueda');
+                }
+                
+                const instrumentos = await response.json();
+                displayInstrumentos(instrumentos);
+            } catch (error) {
+                console.error('Error en búsqueda:', error);
+            }
+        }
+
+        function displayInstrumentos(instrumentos) {
+            const tbody = document.getElementById('instrumentsTable');
+            const instrumentsCount = document.getElementById('instrumentsCount');
+            
+            instrumentsCount.textContent = instrumentos.length;
+
+            if (instrumentos.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No se encontraron instrumentos</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const canEdit = document.getElementById('btnAddInstrument').style.display !== 'none';
+
+            tbody.innerHTML = instrumentos.map(instrumento => `
+                <tr>
+                    <td><strong>#${instrumento.id}</strong></td>
+                    <td>
+                        <i class="fas fa-vial me-2 text-primary"></i>
+                        <strong>${instrumento.nombre}</strong>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark">
+                            <i class="fas fa-folder me-1"></i>${instrumento.categoria}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${getEstadoBadgeClass(instrumento.estado)}">
+                            <i class="fas ${getEstadoIcon(instrumento.estado)} me-1"></i>
+                            ${instrumento.estado}
+                        </span>
+                    </td>
+                    <td>
+                        <i class="fas fa-map-marker-alt me-1 text-muted"></i>
+                        ${instrumento.ubicacion || 'No especificada'}
+                    </td>
+                    <td>
+                        <small class="text-muted">
+                            ${new Date(instrumento.created_at).toLocaleDateString()}
+                        </small>
+                    </td>
+                    <td>
+                        ${canEdit ? `
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-warning btn-custom" onclick="editInstrument(${instrumento.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-custom" onclick="deleteInstrument(${instrumento.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        ` : '<span class="text-muted">Solo lectura</span>'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            loadInstrumentos();
+        }
+
+        function showAddModal() {
+            document.getElementById('modalTitle').textContent = 'Nuevo Instrumento';
+            document.getElementById('instrumentForm').reset();
+            document.getElementById('instrumentId').value = '';
+            modal.show();
+        }
+
+        function showUploadModal() {
+            document.getElementById('excelFile').value = '';
+            uploadModal.show();
+        }
+
+        async function saveInstrument() {
+            const formData = {
+                nombre: document.getElementById('nombre').value,
+                categoria: document.getElementById('categoria').value,
+                estado: document.getElementById('estado').value,
+                ubicacion: document.getElementById('ubicacion').value
+            };
+
+            const instrumentId = document.getElementById('instrumentId').value;
+            const url = instrumentId ? `/api/instrumentos/${instrumentId}` : '/api/instrumentos';
+            const method = instrumentId ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    modal.hide();
+                    loadInstrumentos();
+                    showAlert('Instrumento guardado exitosamente', 'success');
+                } else {
+                    const error = await response.json();
+                    showAlert('Error: ' + error.error, 'danger');
+                }
+            } catch (error) {
+                showAlert('Error de conexión', 'danger');
+            }
+        }
+
+        async function editInstrument(id) {
+            try {
+                const response = await fetch('/api/instrumentos');
+                const instrumentos = await response.json();
+                const instrumento = instrumentos.find(i => i.id === id);
+                
+                if (instrumento) {
+                    document.getElementById('modalTitle').textContent = 'Editar Instrumento';
+                    document.getElementById('instrumentId').value = instrumento.id;
+                    document.getElementById('nombre').value = instrumento.nombre;
+                    document.getElementById('categoria').value = instrumento.categoria;
+                    document.getElementById('estado').value = instrumento.estado;
+                    document.getElementById('ubicacion').value = instrumento.ubicacion || '';
+                    modal.show();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Error al cargar el instrumento', 'danger');
+            }
+        }
+
+        async function deleteInstrument(id) {
+            if (!confirm('¿Estás seguro de eliminar este instrumento?')) return;
+
+            try {
+                const response = await fetch(`/api/instrumentos/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadInstrumentos();
+                    showAlert('Instrumento eliminado exitosamente', 'success');
+                } else {
+                    const error = await response.json();
+                    showAlert('Error: ' + error.error, 'danger');
+                }
+            } catch (error) {
+                showAlert('Error de conexión', 'danger');
+            }
+        }
+
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} alert-custom fade-in`;
+            alert.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.querySelector('.container').prepend(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        function getEstadoBadgeClass(estado) {
+            switch(estado) {
+                case 'DISPONIBLE': return 'badge-available';
+                case 'PRESTADO': return 'badge-borrowed';
+                case 'MANTENIMIENTO': return 'badge-maintenance';
+                default: return 'bg-secondary';
+            }
+        }
+
+        function getEstadoIcon(estado) {
+            switch(estado) {
+                case 'DISPONIBLE': return 'fa-check-circle';
+                case 'PRESTADO': return 'fa-user-clock';
+                case 'MANTENIMIENTO': return 'fa-wrench';
+                default: return 'fa-question-circle';
+            }
+        }
+
+        // Funciones para Excel
+        async function uploadExcel() {
+            const fileInput = document.getElementById('excelFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showAlert('Por favor selecciona un archivo', 'warning');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/instrumentos/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    uploadModal.hide();
+                    loadInstrumentos();
+                    showAlert('Archivo cargado exitosamente', 'success');
+                } else {
+                    const error = await response.json();
+                    showAlert('Error: ' + error.error, 'danger');
+                }
+            } catch (error) {
+                showAlert('Error al cargar el archivo', 'danger');
+            }
+        }
+
+        async function downloadExcel() {
+            try {
+                const response = await fetch('/api/instrumentos/download');
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'instrumentos.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    showAlert('Archivo descargado exitosamente', 'success');
+                } else {
+                    const error = await response.json();
+                    showAlert('Error: ' + error.error, 'danger');
+                }
+            } catch (error) {
+                showAlert('Error al descargar el archivo', 'danger');
+            }
+        }
+    </script>
+</body>
+</html>
