@@ -1,0 +1,143 @@
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand navbar-brand-custom" href="/index.html">
+            <i class="fas fa-flask me-2"></i>
+            <strong>Lab Instruments</strong>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto" id="dynamicMenu">
+                <!-- El menú se cargará dinámicamente según el rol -->
+            </ul>
+            <div class="navbar-nav">
+                <span class="navbar-text navbar-text-custom me-3" id="userInfoNav">
+                    <i class="fas fa-user me-1"></i>
+                    <span id="userName">Usuario</span>
+                    <span class="badge bg-light text-dark ms-2" id="userRoleNav">Rol</span>
+                </span>
+                <a class="btn btn-outline-light btn-sm" href="/logout">
+                    <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+// Función para cargar información del usuario y menú dinámico
+async function loadNavbarUserInfo() {
+    try {
+        const response = await fetch('/tipo-usuario');
+        if (response.ok) {
+            const data = await response.json();
+            const userName = document.getElementById('userName');
+            const userRoleNav = document.getElementById('userRoleNav');
+            const dynamicMenu = document.getElementById('dynamicMenu');
+
+            if (userName) userName.textContent = data.tipo_usuario;
+            if (userRoleNav) userRoleNav.textContent = data.tipo_usuario;
+
+            // Cargar menú según el rol
+            let menuHTML = '';
+            switch(data.tipo_usuario) {
+                case 'admin':
+                    menuHTML = `
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/index.html">
+                                <i class="fas fa-home me-1"></i>Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/ver-usuarios">
+                                <i class="fas fa-users me-1"></i>Usuarios
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/instrumentos">
+                                <i class="fas fa-vial me-1"></i>Instrumentos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/busqueda">
+                                <i class="fas fa-search me-1"></i>Búsqueda
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/prestamos">
+                                <i class="fas fa-shopping-bag me-1"></i>Pedidos
+                            </a>
+                        </li>
+                    `;
+                    break;
+                case 'cliente':
+                    menuHTML = `
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/index.html">
+                                <i class="fas fa-home me-1"></i>Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/mis-datos">
+                                <i class="fas fa-user me-1"></i>Mis Datos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/busqueda">
+                                <i class="fas fa-search me-1"></i>Búsqueda
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/prestamos">
+                                <i class="fas fa-shopping-bag me-1"></i>Mis Pedidos
+                            </a>
+                        </li>
+                    `;
+                    break;
+                case 'proveedor':
+                    menuHTML = `
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/index.html">
+                                <i class="fas fa-home me-1"></i>Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/mis-productos">
+                                <i class="fas fa-box me-1"></i>Mis Productos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/instrumentos">
+                                <i class="fas fa-vial me-1"></i>Instrumentos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/busqueda">
+                                <i class="fas fa-search me-1"></i>Búsqueda
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/prestamos">
+                                <i class="fas fa-shopping-bag me-1"></i>Pedidos Recibidos
+                            </a>
+                        </li>
+                    `;
+                    break;
+            }
+
+            if (dynamicMenu) dynamicMenu.innerHTML = menuHTML;
+        }
+    } catch (error) {
+        console.error('Error cargando información del navbar:', error);
+    }
+}
+
+// Ejecutar cuando se carga el navbar
+document.addEventListener('DOMContentLoaded', function() {
+    loadNavbarUserInfo();
+});
+
+// Hacer la función global para que pueda ser llamada desde otras páginas
+window.loadNavbarUserInfo = loadNavbarUserInfo;
+</script>
