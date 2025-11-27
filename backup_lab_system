@@ -1,0 +1,110 @@
+-- Backup de Base de Datos: lab_system
+-- Fecha: 2025-11-27T07:08:51.226Z
+-- ============================================
+
+CREATE DATABASE IF NOT EXISTS `lab_system`;
+USE `lab_system`;
+
+
+-- ============================================
+-- Tabla: codigos_acceso
+-- ============================================
+DROP TABLE IF EXISTS `codigos_acceso`;
+CREATE TABLE `codigos_acceso` (
+  `codigo` varchar(20) NOT NULL,
+  `tipo_usuario` varchar(20) NOT NULL,
+  PRIMARY KEY (`codigo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Insertando datos en codigos_acceso
+INSERT INTO `codigos_acceso` (`codigo`, `tipo_usuario`) VALUES ('ADMIN123', 'admin');
+INSERT INTO `codigos_acceso` (`codigo`, `tipo_usuario`) VALUES ('CLIENTE456', 'cliente');
+INSERT INTO `codigos_acceso` (`codigo`, `tipo_usuario`) VALUES ('PROVEEDOR789', 'proveedor');
+
+
+-- ============================================
+-- Tabla: instrumentos
+-- ============================================
+DROP TABLE IF EXISTS `instrumentos`;
+CREATE TABLE `instrumentos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `categoria` varchar(50) DEFAULT NULL,
+  `estado` enum('DISPONIBLE','PRESTADO','MANTENIMIENTO') DEFAULT 'DISPONIBLE',
+  `ubicacion` varchar(100) DEFAULT NULL,
+  `proveedor_id` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `proveedor_id` (`proveedor_id`),
+  CONSTRAINT `instrumentos_ibfk_1` FOREIGN KEY (`proveedor_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Insertando datos en instrumentos
+INSERT INTO `instrumentos` (`id`, `nombre`, `categoria`, `estado`, `ubicacion`, `proveedor_id`, `created_at`) VALUES (1, 'Multimetro', 'Medición', 'PRESTADO', 'Lab A', 16, '2025-11-25T15:43:06.000Z');
+INSERT INTO `instrumentos` (`id`, `nombre`, `categoria`, `estado`, `ubicacion`, `proveedor_id`, `created_at`) VALUES (2, 'Osciloscopio Digital', 'Medición', 'DISPONIBLE', 'Laboratorio B', 16, '2025-11-25T15:58:55.000Z');
+INSERT INTO `instrumentos` (`id`, `nombre`, `categoria`, `estado`, `ubicacion`, `proveedor_id`, `created_at`) VALUES (3, 'Osciloscopio Digital', 'Medición', 'DISPONIBLE', 'Laboratorio B', 16, '2025-11-25T15:59:11.000Z');
+INSERT INTO `instrumentos` (`id`, `nombre`, `categoria`, `estado`, `ubicacion`, `proveedor_id`, `created_at`) VALUES (4, 'Multimetro Digital Pro', 'Medición', 'DISPONIBLE', 'Laboratorio A', 13, '2025-11-25T16:24:42.000Z');
+INSERT INTO `instrumentos` (`id`, `nombre`, `categoria`, `estado`, `ubicacion`, `proveedor_id`, `created_at`) VALUES (6, 'Guitarra', 'Acustica', 'PRESTADO', 'Lab A', 8, '2025-11-27T07:06:16.000Z');
+
+
+-- ============================================
+-- Tabla: pedidos
+-- ============================================
+DROP TABLE IF EXISTS `pedidos`;
+CREATE TABLE `pedidos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `cliente_id` int NOT NULL,
+  `instrumento_id` int NOT NULL,
+  `proveedor_id` int NOT NULL,
+  `cantidad` int DEFAULT '1',
+  `estado` enum('PENDIENTE','CONFIRMADO','ENVIADO','ENTREGADO','CANCELADO') DEFAULT 'PENDIENTE',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `cliente_id` (`cliente_id`),
+  KEY `instrumento_id` (`instrumento_id`),
+  KEY `proveedor_id` (`proveedor_id`),
+  CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`cliente_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `pedidos_ibfk_2` FOREIGN KEY (`instrumento_id`) REFERENCES `instrumentos` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `pedidos_ibfk_3` FOREIGN KEY (`proveedor_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Insertando datos en pedidos
+INSERT INTO `pedidos` (`id`, `cliente_id`, `instrumento_id`, `proveedor_id`, `cantidad`, `estado`, `created_at`, `updated_at`) VALUES (1, 11, 4, 13, 2, 'PENDIENTE', '2025-11-25T16:24:55.000Z', '2025-11-27T07:00:02.000Z');
+INSERT INTO `pedidos` (`id`, `cliente_id`, `instrumento_id`, `proveedor_id`, `cantidad`, `estado`, `created_at`, `updated_at`) VALUES (2, 7, 4, 13, 1, 'CANCELADO', '2025-11-25T16:48:43.000Z', '2025-11-27T07:00:02.000Z');
+INSERT INTO `pedidos` (`id`, `cliente_id`, `instrumento_id`, `proveedor_id`, `cantidad`, `estado`, `created_at`, `updated_at`) VALUES (3, 7, 4, 13, 1, 'CANCELADO', '2025-11-25T16:59:06.000Z', '2025-11-27T07:00:02.000Z');
+INSERT INTO `pedidos` (`id`, `cliente_id`, `instrumento_id`, `proveedor_id`, `cantidad`, `estado`, `created_at`, `updated_at`) VALUES (13, 17, 4, 13, 2, 'ENVIADO', '2025-11-25T17:26:59.000Z', '2025-11-27T07:00:02.000Z');
+INSERT INTO `pedidos` (`id`, `cliente_id`, `instrumento_id`, `proveedor_id`, `cantidad`, `estado`, `created_at`, `updated_at`) VALUES (26, 17, 1, 16, 3, 'ENVIADO', '2025-11-25T17:45:37.000Z', '2025-11-25T17:46:08.000Z');
+INSERT INTO `pedidos` (`id`, `cliente_id`, `instrumento_id`, `proveedor_id`, `cantidad`, `estado`, `created_at`, `updated_at`) VALUES (39, 17, 2, 16, 2, 'PENDIENTE', '2025-11-25T18:01:40.000Z', '2025-11-27T07:00:02.000Z');
+INSERT INTO `pedidos` (`id`, `cliente_id`, `instrumento_id`, `proveedor_id`, `cantidad`, `estado`, `created_at`, `updated_at`) VALUES (40, 17, 2, 16, 2, 'PENDIENTE', '2025-11-25T18:01:48.000Z', '2025-11-27T07:00:02.000Z');
+INSERT INTO `pedidos` (`id`, `cliente_id`, `instrumento_id`, `proveedor_id`, `cantidad`, `estado`, `created_at`, `updated_at`) VALUES (89, 7, 2, 16, 1, 'PENDIENTE', '2025-11-27T06:30:04.000Z', '2025-11-27T07:00:02.000Z');
+
+
+-- ============================================
+-- Tabla: usuarios
+-- ============================================
+DROP TABLE IF EXISTS `usuarios`;
+CREATE TABLE `usuarios` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `tipo_usuario` varchar(20) DEFAULT 'cliente',
+  `nombre` varchar(100) DEFAULT NULL,
+  `correo` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Insertando datos en usuarios
+INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `tipo_usuario`, `nombre`, `correo`, `created_at`) VALUES (1, 'admin', '$2b$10$ebi7/e3SaMKENQxNR9zLr.egytTSWESJJc8xjPY2IRD8ARO.YQGHC', 'admin', 'Administrador', 'admin@lab.com', '2025-11-25T15:35:16.000Z');
+INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `tipo_usuario`, `nombre`, `correo`, `created_at`) VALUES (7, 'cliente', '$2b$10$bVe6cc.NP2HDOXsZIW4geu.7yRohKkiC.Da9f7kWcokS/PDSM2XmO', 'cliente', 'cliente', 'cliente@lab.com', '2025-11-25T16:06:59.000Z');
+INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `tipo_usuario`, `nombre`, `correo`, `created_at`) VALUES (8, 'testproveedor2', '$2b$10$1c1vW1c5YoU37ohM.JSUoOjSpovKsXwNay5Sk407vJ5c.bwuHYwAe', 'proveedor', 'testproveedor2', 'testproveedor2@lab.com', '2025-11-25T16:11:01.000Z');
+INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `tipo_usuario`, `nombre`, `correo`, `created_at`) VALUES (9, 'proveedor', '$2b$10$gBSCVg85ptEjKB1olIxEhOBkEIAYkdNtHg/4BC/tDL/sVt7uUwy4e', 'proveedor', 'proveedor', 'proveedor@lab.com', '2025-11-25T16:12:02.000Z');
+INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `tipo_usuario`, `nombre`, `correo`, `created_at`) VALUES (10, 'testclient', '$2b$10$8jITL0VNQlQCEKBWEi1ZLOwJ2pL7lRvQqCc5lZKsXEj8EqRy.ZSQW', 'cliente', 'Cliente Test', 'client@test.com', '2025-11-25T16:15:18.000Z');
+INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `tipo_usuario`, `nombre`, `correo`, `created_at`) VALUES (11, 'juan_perez', '$2b$10$WTZEBO3ZNs5d7G5MY836GeBMxbaK4NCtKeUslRfi/snCsX3rfShpm', 'cliente', 'juan_perez', 'juan_perez@lab.com', '2025-11-25T16:15:28.000Z');
+INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `tipo_usuario`, `nombre`, `correo`, `created_at`) VALUES (13, 'proveedor_equipos', '$2b$10$A6XmO0Xj3BGCdKzx3XnEsO/mJA0ZcVPy/tGNhwdeTcGVCenRHjXbq', 'proveedor', 'proveedor_equipos', 'proveedor_equipos@lab.com', '2025-11-25T16:23:47.000Z');
+INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `tipo_usuario`, `nombre`, `correo`, `created_at`) VALUES (16, 'proveedor1', '$2b$10$TVskg8BnmKvsuACqq84F/ea7PJFyEj2Bk7bqcOiawSLeUpioZiMP2', 'proveedor', 'Proveedor Uno', 'proveedor1@lab.com', '2025-11-25T17:25:45.000Z');
+INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `tipo_usuario`, `nombre`, `correo`, `created_at`) VALUES (17, 'cliente1', '$2b$10$pbzVnMPWQ5nl7WlXOnXCcOojnCFy3RgHKprPk5HKEpHscpjVTFZ2a', 'cliente', 'Cliente Uno', 'cliente1@lab.com', '2025-11-25T17:25:45.000Z');
+INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `tipo_usuario`, `nombre`, `correo`, `created_at`) VALUES (96, 'Proveedor uno', '$2b$10$9qhkvq.cP4fpVc/5Pi7EYe3vh9.3IzYJhvwdzZyXXF5H/VASRen/q', 'proveedor', 'David', 'ola', '2025-11-27T06:30:53.000Z');
+
